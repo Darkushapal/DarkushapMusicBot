@@ -22,7 +22,7 @@ async def questions_answer_yes(message: Message):
     )
 
 
-@router.message(F.text.lower()== "нет")
+@router.message(F.text.lower() == "нет")
 async def question_answer_no(message: Message):
     await message.answer(
         "УВЫ. ГОРНИЛО",

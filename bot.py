@@ -3,6 +3,7 @@ from aiogram import Bot, Dispatcher
 import logging
 from config import config
 from handlers import questions, diff_types, group_games, forwarded_from_channel
+from middlewares import messages_middlewares
 
 logging.basicConfig(level=logging.INFO)
 
@@ -14,6 +15,7 @@ async def main():
 
     # Регистрация роутеров
     dp.include_routers(questions.router, diff_types.router, group_games.router, forwarded_from_channel.router)
+    dp.callback_query.outer_middleware(allmessages())
 
     # Запускаем бота и пропускаем все накопленные входящие
     # Да, этот метод можно вызвать даже если у вас поллинг
