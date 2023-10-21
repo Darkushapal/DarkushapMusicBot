@@ -3,6 +3,8 @@ from aiogram.filters import Command
 from aiogram.types import Message, ReplyKeyboardRemove
 from keyboards.for_questions import get_yes_no_kb
 
+import time
+
 router = Router()
 
 
@@ -22,7 +24,7 @@ async def questions_answer_yes(message: Message):
     )
 
 
-@router.message(F.text.lower() == "нет")
+@router.message(F.text.lower() == "нет", flags={"long_operation": "upload_video_note"})
 async def question_answer_no(message: Message):
     await message.answer(
         "УВЫ. ГОРНИЛО",
