@@ -2,8 +2,8 @@ import yt_dlp
 import os
 import re
 
-from aiogram import Router, F, types, Bot
-from aiogram.types import Message, CallbackQuery
+from aiogram import Router
+from aiogram.types import Message
 from aiogram.types import FSInputFile
 
 router = Router()
@@ -11,16 +11,9 @@ router = Router()
 video_dir = 'for_files'
 
 
-@router.message(F.text, flags={"long_operation": "upload_video_note"})
-async def downloader(message: Message):
+@router.message(flags={"long_operation": "upload_video_note"})
+async def downloader(message: Message, url, info):
     ydl = yt_dlp.YoutubeDL()
-    if message.entities is not None:
-        url = message.text
-        info = ydl.extract_info(url, download=False)
-
-    else:
-        info = ydl.extract_info(f"ytsearch1:{message.text}", download=False)['entries'][0]
-        url = f"ytsearch1:{message.text}"
 
     video_title = info.get('title')
     video_duration = info.get('duration')
@@ -45,10 +38,10 @@ async def downloader(message: Message):
         final_audio = FSInputFile(video_path)
 
         await message.bot.send_audio(
-                chat_id=message.chat.id,
-                audio=final_audio,
-                duration=video_duration,
-                title=video_title,
+            chat_id=message.chat.id,
+            audio=final_audio,
+            duration=video_duration,
+            title=video_title,
         )
 
         os.remove(video_path)
