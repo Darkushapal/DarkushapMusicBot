@@ -19,5 +19,3 @@ async def url_msg(message: Message):
         url=url,
         info=info
         )
-
-

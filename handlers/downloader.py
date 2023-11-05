@@ -44,4 +44,5 @@ async def downloader(message: Message, url, info):
             title=video_title,
         )
 
-        os.remove(video_path)
+        if os.path.exists(video_path):
+            os.remove(video_path)
