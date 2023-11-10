@@ -13,13 +13,9 @@ async def url_msg(message: Message):
     ydl = yt_dlp.YoutubeDL()
     url = message.text
     info = ydl.extract_info(url, download=False)
-    await message.answer(
-        text="Скачиваю",
-        Message=message,
-        url=url,
-        info=info
-    )
+    await message.answer("Скачиваю")
 
+    # call downloader and take info of video
     audio, duration, title = downloader(
         message=message,
         url=url,

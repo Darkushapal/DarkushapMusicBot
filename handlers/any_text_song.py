@@ -17,11 +17,32 @@ async def url_msg(message: Message):
     ydl = yt_dlp.YoutubeDL(ydl_opts)
     url = f"ytsearch5:{message.text}"
     info = ydl.extract_info(url, download=False)['entries'][0:5]
-    info.get('title')
 
-    downloaded_info = downloader(
-        message,
+    search_results = ''
+    counter = 0
+    for i in info:
+        counter += 1
+        search_results = f'{search_results}{counter}) {i.get("title")}\n'
+
+    await message.answer(
+        text=f'Выберите нужное название:\n{search_results}'
+        )
+
+
+    # give a state, waiting for a response
+
+    # make a keyboard
+"""
+    # call downloader and take info of video
+    audio, duration, title = downloader(
+        message=message,
         url=url,
         info=info
     )
-    await bot.SendAudio
+
+    await message.answer_audio(
+        audio=audio,
+        duration=duration,
+        title=title
+    )
+"""
