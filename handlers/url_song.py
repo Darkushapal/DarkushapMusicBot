@@ -1,23 +1,31 @@
 import yt_dlp
+import os
 
 from aiogram import Router, F
 from aiogram.types import Message
 from handlers.downloader import downloader
-from aiogram.methods.send_audio import SendAudio
+from aiogram.filters import StateFilter
+from aiogram.filters.state import State, StatesGroup
+from aiogram.fsm.context import FSMContext
 
 router = Router()
 
 
-@router.message(F.entities[0].type == 'url', flags={'throttling_key': 'default'})
-async def url_msg(message: Message):
+class UsingBot(StatesGroup):
+    getting_info = State()
+
+
+@router.message(StateFilter(None), F.entities[0].type == 'url', flags={'long_operation': 'upload_video_note'})
+async def url_msg(message: Message, state: FSMContext):
+    await state.set_state(UsingBot.getting_info)
     ydl = yt_dlp.YoutubeDL()
     url = message.text
     info = ydl.extract_info(url, download=False)
-    await message.answer("Скачиваю")
+
+    sent_message = await message.answer("Скачиваю :]")
 
     # call downloader and take info of video
-    audio, duration, title = downloader(
-        message=message,
+    audio, duration, title, video_path = downloader(
         url=url,
         info=info
     )
@@ -27,3 +35,10 @@ async def url_msg(message: Message):
         duration=duration,
         title=title
     )
+
+    await sent_message.delete()
+
+    if os.path.exists(video_path):
+        os.remove(video_path)
+
+    await state.clear()

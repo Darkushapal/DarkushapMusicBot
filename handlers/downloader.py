@@ -2,16 +2,13 @@ import yt_dlp
 import os
 import re
 
-from aiogram import Router, F
-from aiogram.types import Message
 from aiogram.types import FSInputFile
+
 
 video_dir = 'for_files'
 
 
-def downloader(message: Message, url, info):
-    ydl = yt_dlp.YoutubeDL()
-
+def downloader(url, info):
     video_title = info.get('title')
     video_duration = info.get('duration')
     video_file = f"{video_title}.mp3"
@@ -30,8 +27,7 @@ def downloader(message: Message, url, info):
     return (final_audio,
             video_duration,
             video_title,
+            video_path
             )
 
-    if os.path.exists(video_path):
-        os.remove(video_path)
 
