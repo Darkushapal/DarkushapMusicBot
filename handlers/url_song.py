@@ -22,6 +22,10 @@ async def url_msg(message: Message, state: FSMContext):
     url = message.text
     info = ydl.extract_info(url, download=False)
 
+    if info.get("duration") > 4000:
+        await message.answer("Ваше видео слишком долгое, пожалуйста, пожалейте бота :[")
+        await state.clear()
+        return
     sent_message = await message.answer("Скачиваю :]")
 
     # call downloader and take info of video

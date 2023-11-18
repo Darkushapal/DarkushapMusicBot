@@ -15,10 +15,17 @@ def downloader(url, info):
     video_file = re.sub(r'[\/:*?"<>|]', '_', video_file)
     video_path = os.path.join(video_dir, video_file)
     options = {
-            'format': 'mp3/bestaudio/best',
+            'format': 'bestaudio/best',
             'outtmpl': f'{video_path}',
             'noplaylist': True,
         }
+    if video_duration > 1000:
+        options = {
+            'format': 'worstaudio/worst',
+            'outtmpl': f'{video_path}',
+            'noplaylist': True,
+        }
+
     ydl = yt_dlp.YoutubeDL(options)
     ydl.download([url])
 

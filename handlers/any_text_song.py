@@ -52,6 +52,7 @@ async def url_msg(message: Message, state: FSMContext):
 async def song_chosen(message: Message, state: FSMContext):
     user_data = await state.get_data()
     info = user_data["info"]
+
     info_titles = list((i.get("title") for i in info))
 
     if message.text not in info_titles:
@@ -60,16 +61,24 @@ async def song_chosen(message: Message, state: FSMContext):
         )
         return
 
+    index_of_song = info_titles.index(message.text)
+    info = info[index_of_song]
+    url = info.get('url')
+
+    if info.get("duration") > 4000:
+        await message.answer(
+            text="Ваше видео слишком долгое, пожалуйста, пожалейте бота :[",
+            reply_markup=ReplyKeyboardRemove()
+            )
+        await state.clear()
+        return
+
     sent_message = await message.answer(
         text=f"Вы выбрали {message.text.lower()}. \n"
              f"Скачиваю :]",
         reply_markup=ReplyKeyboardRemove()
         )
     await state.set_state(UsingBot.getting_info)
-
-    index_of_song = info_titles.index(message.text)
-    info = info[index_of_song]
-    url = info.get('url')
 
     audio, duration, title, video_path = downloader(
         url=url,
