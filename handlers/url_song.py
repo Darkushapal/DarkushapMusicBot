@@ -18,9 +18,19 @@ class UsingBot(StatesGroup):
 @router.message(StateFilter(None), F.entities[0].type == 'url', flags={'long_operation': 'upload_video_note'})
 async def url_msg(message: Message, state: FSMContext):
     await state.set_state(UsingBot.getting_info)
-    ydl = yt_dlp.YoutubeDL()
     url = message.text
+
+    # Check if the URL is a YouTube link
+    if "youtube.com" not in url and "youtu.be" not in url:
+        await message.answer("Эй, я же попросил ссылку на ютуб (ノಠ益ಠ)ノ")
+        await state.clear()
+        return
+
+    ydl = yt_dlp.YoutubeDL()
     info = ydl.extract_info(url, download=False)
+
+    # Fetch the author of the song
+    author = info.get("uploader", "Unknown Artist")  # Default to "Unknown Artist" if not found
 
     if info.get("duration") > 4000:
         await message.answer("Ваше видео слишком долгое, пожалуйста, пожалейте бота :[")
@@ -37,7 +47,8 @@ async def url_msg(message: Message, state: FSMContext):
     await message.answer_audio(
         audio=audio,
         duration=duration,
-        title=title
+        title=title,
+        performer=author  # Include the author in the audio message
     )
 
     await sent_message.delete()
