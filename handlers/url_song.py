@@ -27,8 +27,18 @@ async def url_msg(message: Message, state: FSMContext):
         await state.clear()
         return
 
-    ydl = yt_dlp.YoutubeDL()
-    info = ydl.extract_info(url, download=False)
+    # Configure yt-dlp with cookies
+    ydl_opts = {
+        'cookiefile': 'www.youtube.com_coockies.txt'  # Path to your cookies file
+    }
+    ydl = yt_dlp.YoutubeDL(ydl_opts)
+    
+    try:
+        info = ydl.extract_info(url, download=False)
+    except Exception as e:
+        await message.answer(f"Ошибка при получении информации о видео: {str(e)}")
+        await state.clear()
+        return
 
     # Fetch the author of the song
     author = info.get("uploader", "Unknown Artist")  # Default to "Unknown Artist" if not found
