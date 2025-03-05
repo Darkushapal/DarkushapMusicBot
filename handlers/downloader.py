@@ -27,12 +27,14 @@ def downloader(url, info):
     # Set different options based on content type
     if is_video:
         options = {
+            'cookiefile': 'www.youtube.com_coockies.txt',
             'format': 'best[ext=mp4]/best' if video_duration <= 1000 else 'worst[ext=mp4]/worst',
             'outtmpl': f'{video_path}',
             'noplaylist': True,
         }
     else:
         options = {
+            'cookiefile': 'www.youtube.com_coockies.txt',
             'format': 'bestaudio/best' if video_duration <= 1000 else 'worstaudio/worst',
             'outtmpl': f'{video_path}',
             'noplaylist': True,
