@@ -31,6 +31,8 @@ class VideoDownload(StatesGroup):
 async def handle_video_links(message: Message, state: FSMContext):
     """Handler for TikTok and YouTube Shorts links"""
     await state.set_state(VideoDownload.downloading)
+
+    print("Check that TIKTOK router working")
     url = message.text
     
     # Configure yt-dlp with cookies for YouTube
@@ -52,8 +54,6 @@ async def handle_video_links(message: Message, state: FSMContext):
         
         sent_message = await message.answer("Скачиваю видео :]")
         
-        # Determine video type for better user feedback
-        video_type = "YouTube Shorts" if "youtube.com/shorts" in url else "TikTok"
         
         # Download the video
         from handlers.downloader import downloader
