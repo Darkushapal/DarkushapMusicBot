@@ -10,7 +10,7 @@ os.makedirs(video_dir, exist_ok=True)
 
 
 def downloader(url, info):
-    video_title = info.get('title')
+    video_title = info.get('title')[0:20]
     video_duration = info.get('duration')
     
     # Determine if it's a TikTok or YouTube Shorts video
