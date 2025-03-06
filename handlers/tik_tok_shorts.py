@@ -15,7 +15,7 @@ video_dir = 'for_files'
 os.makedirs(video_dir, exist_ok=True)
 
 # Regex patterns for TikTok and YouTube Shorts URLs
-TIKTOK_PATTERN = r'https?://(?:www\.)?(?:tiktok\.com|vm\.tiktok\.com)/(?:@[\w.]+/video/|t/|v/|embed/|video/|)(\d+)'
+TIKTOK_PATTERN = r'https?://(?:(?:www|m|vm|vt)\.)?(?:tiktok\.com|tiktok\.org|tiktokv\.com|tiktokcdn\.com).*'
 YOUTUBE_SHORTS_PATTERN = r'https?://(?:www\.)?youtube\.com/shorts/([a-zA-Z0-9_-]+)'
 
 
@@ -32,7 +32,6 @@ async def handle_video_links(message: Message, state: FSMContext):
     """Handler for TikTok and YouTube Shorts links"""
     await state.set_state(VideoDownload.downloading)
 
-    print("Check that TIKTOK router working")
     url = message.text
     
     # Configure yt-dlp with cookies for YouTube
