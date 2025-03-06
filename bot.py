@@ -15,7 +15,7 @@ async def main():
     bot = Bot(token=config.bot_token.get_secret_value())
     dp = Dispatcher(storage=MemoryStorage())
 
-    dp.include_routers(start.router, url_song.router, any_text_song.router, tik_tok_shorts.router)
+    dp.include_routers(start.router, tik_tok_shorts.router, url_song.router, any_text_song.router)
     dp.message.middleware(ChatActionMiddleware())
 
     await bot.delete_webhook(drop_pending_updates=True)
